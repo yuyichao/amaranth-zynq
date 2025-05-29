@@ -1,3 +1,5 @@
+#
+
 from amaranth import Elaboratable, Signal, Module, Instance, Record
 from .layouts import get_ps8_layout, get_axi_layout
 
@@ -5,11 +7,6 @@ def PsSignal(*argc, dir=None, **argv):
     s = Signal(*argc, **argv)
     s.dir = dir
     return s
-
-class PsPorts:
-    def __init__(self, ports):
-        for k, v in ports.items():
-            setattr(self, k.lower(), v)
 
 class PsZynqMP(Elaboratable):
     MAXI = ['maxigp0', 'maxigp1', 'maxigp2']
@@ -32,9 +29,7 @@ class PsZynqMP(Elaboratable):
     ]
 
     def __init__(self):
-        ps_layout = get_ps8_layout()
-        self._ports = self._get_ps_ports(ps_layout)
-        self.ports = PsPorts(self._ports)
+        self._ports = self._get_ps_ports(get_ps8_layout())
         self._clocks = [None for _ in range(4)]
         self._resets = [None for _ in range(4)]
         self._irqs = [None for _ in range(16)]

@@ -1,10 +1,10 @@
 from amaranth import Elaboratable, Signal, Module, Instance, Record
 from .layouts import get_ps8_layout, get_axi_layout
 
-class PsSignal(Signal):
-    def __init__(self, *argc, dir=None, **argv):
-        Signal.__init__(self, *argc, **argv)
-        self.dir = dir
+def PsSignal(*argc, dir=None, **argv):
+    s = Signal(*argc, **argv)
+    s.dir = dir
+    return s
 
 class PsPorts:
     def __init__(self, ports):

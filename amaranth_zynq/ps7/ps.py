@@ -3,10 +3,10 @@ from .layouts import get_ps_layout, get_axi_layout
 
 __all__ = ['ZynqPS']
 
-class PsSignal(Signal):
-    def __init__(self, *argc, dir=None, **argv):
-        Signal.__init__(self, *argc, **argv)
-        self.dir = dir
+def PsSignal(*argc, dir=None, **argv):
+    s = Signal(*argc, **argv)
+    s.dir = dir
+    return s
 
 class PsPorts:
     def __init__(self, ports):

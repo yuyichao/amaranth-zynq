@@ -585,6 +585,7 @@ class PsZynqMP(wiring.Component):
     ]
 
     def __init__(self):
+        super().__init__()
         self._clocks = [None for _ in range(4)]
         self._resets = [None for _ in range(4)]
         self._irqs = [None for _ in range(16)]

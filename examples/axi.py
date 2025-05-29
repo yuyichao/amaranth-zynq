@@ -29,16 +29,16 @@ class AXIExample(Elaboratable):
         axi_master = ps.MAXIGP2
         m.d.comb += ps.MAXIGP2ACLK.eq(clk)
 
-        axi2axil = AXI2AXILite(data_w=32, addr_w=16, id_w=5, domain='sync')
+        axi2axil = AXI2AXILite(data_w=128, addr_w=40, id_w=16, domain='sync')
         m.submodules.axi2axil = axi2axil
         wiring.connect(m, axi_master, axi2axil.axi)
 
-        xbar = AXILiteXBar(data_w=32, addr_w=16, domain='sync')
+        xbar = AXILiteXBar(data_w=128, addr_w=40, domain='sync')
         m.submodules.xbar = xbar
         xbar.add_master(axi2axil.axilite)
 
         for i in range(5):
-            demo = DemoAXI(32, 16, 'sync')
+            demo = DemoAXI(128, 40, 'sync')
             m.submodules['demo' + str(i)] = demo
             xbar.add_slave(demo.axilite, 0x1000 * i, 0x1000)
 

@@ -1,4 +1,4 @@
-from amaranth.vendor.xilinx import XilinxPlatform
+from amaranth.vendor import XilinxPlatform
 
 __all__ = ['ZynqPL']
 

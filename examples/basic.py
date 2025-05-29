@@ -7,8 +7,7 @@ from amaranth_zynq.ps8.plat import ZynqMPPlatform
 class Zu3egPlatform(ZynqMPPlatform):
     device     = 'xczu3eg'
     package    = 'sfva625'
-    speed      = '1'
-    grade      = 'e'
+    speed      = '1-e'
     resources  = []
     connectors = []
 

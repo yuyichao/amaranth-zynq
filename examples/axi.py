@@ -9,8 +9,7 @@ from urllib import request
 class Zu3egPlatform(ZynqMPPlatform):
     device     = 'xczu3eg'
     package    = 'sfva625'
-    speed      = '1'
-    grade      = 'e'
+    speed      = '1-e'
     resources  = []
     connectors = []
 

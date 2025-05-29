@@ -1,19 +1,19 @@
-from amaranth.vendor.xilinx_ultrascale import *
+from amaranth.vendor import XilinxPlatform
 
 
-class ZynqMPPlatform(XilinxUltraScalePlatform):
+class ZynqMPPlatform(XilinxPlatform):
     _vivado_file_templates = {
-        **XilinxUltraScalePlatform._vivado_file_templates,
+        **XilinxPlatform._vivado_file_templates,
         "{{name}}.bif": r"""
             all:
             {
-            	[destination_device = pl] {{name}}.bit
+                [destination_device = pl] {{name}}.bit
             }
         """
     }
 
     _vivado_command_templates = [
-        *XilinxUltraScalePlatform._vivado_command_templates,
+        *XilinxPlatform._vivado_command_templates,
         r"""
             bootgen
             -image {{name}}.bif
@@ -22,5 +22,3 @@ class ZynqMPPlatform(XilinxUltraScalePlatform):
             -o {{name}}_bootgen.bin
         """
     ]
-
-

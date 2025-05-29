@@ -409,7 +409,7 @@ def get_ps_layout():
         ("MAXIGP1ACLK",                 1,  "input" ),
         ("MAXIGP1ARREADY",              1,  "input" ),
         ("MAXIGP1AWREADY",              1,  "input" ),
-        ("MAXIGP1BID",                  5,  "input" ),
+        ("MAXIGP1BID",                  12, "input" ),
         ("MAXIGP1BRESP",                2,  "input" ),
         ("MAXIGP1BVALID",               1,  "input" ),
         ("MAXIGP1RDATA",                32, "input" ),

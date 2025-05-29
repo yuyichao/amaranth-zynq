@@ -1,4 +1,5 @@
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth_zynq.ps8.ps import PsZynqMP
 from amaranth_zynq.ps8.plat import ZynqMPPlatform

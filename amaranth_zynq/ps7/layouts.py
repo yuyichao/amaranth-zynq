@@ -632,11 +632,11 @@ def get_axi_layout(axi, data_w=None, addr_w=None, id_w=None):
     assert data_w is None or data_w % 8 == 0
     if axi == "master":
         if data_w is None:
-            data_w = 128
+            data_w = 32
         if addr_w is None:
             addr_w = 32
         if id_w is None:
-            id_w = 16
+            id_w = 12
         return [
             ("ARADDR", addr_w, "output"),
             ("ARBURST", 2, "output"),
@@ -681,7 +681,7 @@ def get_axi_layout(axi, data_w=None, addr_w=None, id_w=None):
         ]
     if axi == "slave":
         if data_w is None:
-            data_w = 128
+            data_w = 32
         if addr_w is None:
             addr_w = 32
         if id_w is None:
@@ -735,11 +735,11 @@ def get_axi_layout(axi, data_w=None, addr_w=None, id_w=None):
         ]
     if axi == "slave_acp":
         if data_w is None:
-            data_w = 128
+            data_w = 64
         if addr_w is None:
             addr_w = 32
         if id_w is None:
-            id_w = 5
+            id_w = 3
         return [
             ("ARREADY", 1, "output"),
             ("AWREADY", 1, "output"),

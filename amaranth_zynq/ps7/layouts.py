@@ -634,7 +634,7 @@ def get_axi_layout(axi, data_w=None, addr_w=None, id_w=None):
         if data_w is None:
             data_w = 128
         if addr_w is None:
-            addr_w = 40
+            addr_w = 32
         if id_w is None:
             id_w = 16
         return [
@@ -683,7 +683,7 @@ def get_axi_layout(axi, data_w=None, addr_w=None, id_w=None):
         if data_w is None:
             data_w = 128
         if addr_w is None:
-            addr_w = 49
+            addr_w = 32
         if id_w is None:
             id_w = 6
         return [
@@ -737,7 +737,7 @@ def get_axi_layout(axi, data_w=None, addr_w=None, id_w=None):
         if data_w is None:
             data_w = 128
         if addr_w is None:
-            addr_w = 40
+            addr_w = 32
         if id_w is None:
             id_w = 5
         return [

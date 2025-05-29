@@ -1,9 +1,9 @@
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth_zynq.ps8.ps import PsZynqMP
 from amaranth_zynq.ps8.plat import ZynqMPPlatform
-from amaranth_wb2axip import Axi2AxiLite, AxiLiteXBar, DemoAxi, AxiMaster
-from urllib import request
+from amaranth_wb2axip import AXI2AXILite, AXILiteXBar, DemoAXI
 
 
 class Zu3egPlatform(ZynqMPPlatform):
@@ -14,7 +14,7 @@ class Zu3egPlatform(ZynqMPPlatform):
     connectors = []
 
 
-class AxiExample(Elaboratable):
+class AXIExample(Elaboratable):
     def elaborate(self, platform):
         m = Module()
         m.domains += ClockDomain('sync')
@@ -26,26 +26,25 @@ class AxiExample(Elaboratable):
         reset_sync = ResetSynchronizer(reset, domain="sync")
         m.submodules.reset_sync = reset_sync
 
-        axi_ps = ps.get_axi('maxigp2')
-        m.d.comb += axi_ps['ACLK'].eq(clk)
-        axi_master = AxiMaster.from_record(axi_ps)
+        axi_master = ps.MAXIGP2.cast(m, user_width=0)
+        m.d.comb += ps.MAXIGP2ACLK.eq(clk)
 
-        axi2axil = Axi2AxiLite(data_w=32, addr_w=16, id_w=5, domain='sync')
+        axi2axil = AXI2AXILite(data_width=128, addr_width=40, id_width=16, domain='sync')
         m.submodules.axi2axil = axi2axil
-        m.d.comb += axi_master.connect(axi2axil.axi)
+        wiring.connect(m, axi_master, axi2axil.axi)
 
-        xbar = AxiLiteXBar(data_w=32, addr_w=16, domain='sync')
+        xbar = AXILiteXBar(data_width=128, addr_width=40, domain='sync')
         m.submodules.xbar = xbar
         xbar.add_master(axi2axil.axilite)
 
         for i in range(5):
-            demo = DemoAxi(32, 16, 'sync')
+            demo = DemoAXI(128, 16, 'sync')
             m.submodules['demo' + str(i)] = demo
-            xbar.add_slave(demo.axilite, 0x1000 * i, 0x1000)
+            xbar.add_slave(demo.axilite.cast(m, addr_width=40), 0x1000 * i, 0x1000)
 
         return m
 
 
-core = AxiExample()
+core = AXIExample()
 plat = Zu3egPlatform()
 plat.build(core)

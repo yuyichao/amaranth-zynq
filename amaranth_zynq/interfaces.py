@@ -122,3 +122,76 @@ class WDT(_Base):
 
     class Interface(_Base.Interface):
         pass
+
+class ENET(_Base):
+    class Interface(_Base.Interface):
+        pass
+
+    def __init__(self, gmii, mdio):
+        self._gmii = gmii
+        self._mdio = mdio
+        port = dict(
+            DMABUSWIDTH=Out(2),
+            DMATXENDTOG=Out(1),
+            GEMTSUTIMERCNT=Out(94),
+            RXWDATA=Out(8),
+            RXWEOP=Out(1),
+            RXWERR=Out(1),
+            RXWFLUSH=Out(1),
+            RXWSOP=Out(1),
+            RXWSTATUS=Out(45),
+            RXWWR=Out(1),
+            TXRRD=Out(1),
+            TXRSTATUS=Out(4),
+            DMATXSTATUSTOG=In(1),
+            EXTINTIN=In(1),
+            RXWOVERFLOW=In(1),
+            TXRCONTROL=In(1),
+            TXRDATA=In(8),
+            TXRDATARDY=In(1),
+            TXREOP=In(1, init=1),
+            TXRERR=In(1),
+            TXRFLUSHED=In(1),
+            TXRSOP=In(1, init=1),
+            TXRUNDERFLOW=In(1),
+            TXRVALID=In(1),
+        )
+        if gmii:
+            port.update(dict(
+                GMIITXD=Out(8),
+                GMIITXEN=Out(1),
+                GMIITXER=Out(1),
+                SPEEDMODE=Out(3),
+                GMIICOL=In(1),
+                GMIICRS=In(1),
+                GMIIRXCLK=In(1),
+                GMIIRXD=In(8),
+                GMIIRXDV=In(1),
+                GMIIRXER=In(1),
+                GMIITXCLK=In(1),
+            ))
+
+        if mdio:
+            port.update(dict(
+                MDIOMDC=Out(1),
+                MDIOO=Out(1),
+                MDIOTN=Out(1),
+                MDIOI=In(1),
+            ))
+
+        super().__init__(port)
+
+    @property
+    def gmii(self):
+        return self._gmii
+
+    @property
+    def mdio(self):
+        return self._mdio
+
+    def __repr__(self):
+        return f'ENET({self.gmii}, self.{mdio})'
+
+    def __eq__(self, other):
+        return (type(self) is type(other) && self.gmii == other.gmii &&
+                self.mdio == other.mdio)

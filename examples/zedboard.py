@@ -2,8 +2,7 @@ from amaranth import *
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth.build import *
 from amaranth_boards.resources import *
-from amaranth_zynq.ps7 import ZynqPS
-from amaranth_zynq.ps7 import ZynqPL
+from amaranth_zynq.ps7 import ZynqPS, ZynqPL
 
 __all__ = ["ZedboardPS", "ZedboardPlatform"]
 

@@ -1,55 +1,189 @@
 #
 
-from amaranth import Elaboratable, Signal, Module, Instance, Record
-from .layouts import get_ps_layout, get_axi_layout
+from amaranth import Signal, Module, Instance
+from amaranth.hdl import IOPort
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
+
+from amaranth_wb2axip import AXI3
+from amaranth_zynq.interfaces import *
 
 __all__ = ['ZynqPS']
 
-def PsSignal(*argc, dir=None, **argv):
-    s = Signal(*argc, **argv)
-    s.dir = dir
-    return s
+class ZynqPS(wiring.Component):
+    MAXIGP0: Out(AXI3(32, 32, 12))
+    MAXIGP0ACLK: In(1)
+    MAXIGP0ARESETN: Out(1)
+    MAXIGP0ARQOS: Out(4)
+    MAXIGP0AWQOS: Out(4)
+    MAXIGP1: Out(AXI3(32, 32, 12))
+    MAXIGP1ACLK: In(1)
+    MAXIGP1ARESETN: Out(1)
+    MAXIGP1ARQOS: Out(4)
+    MAXIGP1AWQOS: Out(4)
 
-class ZynqPS(Elaboratable):
-    MAXI = ['maxigp0', 'maxigp1']
-    SAXI = ['saxigp0', 'saxigp1']
-    IRQ  = 'IRQF2P'                 # IRQ from PL
-    CLK  = 'FCLKCLK'                # PL Clock
+    SAXIACP: In(AXI3(64, 32, 3))
+    SAXIACPARESETN: Out(1)
+    SAXIACPACLK: In(1)
+    SAXIACPARUSER: In(5)
+    SAXIACPAWUSER: In(5)
+    SAXIACPARQOS: In(4)
+    SAXIACPAWQOS: In(4)
 
-    DEFAULT_ONE = [
-        'EMIOENET0TXRSOP', 'EMIOENET0TXREOP',
-        'EMIOENET1TXRSOP', 'EMIOENET1TXREOP',
-        'EMIOENET2TXRSOP', 'EMIOENET2TXREOP',
-        'EMIOENET3TXRSOP', 'EMIOENET3TXREOP',
-        'EMIOSDIO0WP', 'EMIOSDIO1WP',
-        'EMIOSPI0SSIN', 'EMIOSPI1SSIN',
-        'NFIQ0LPDRPU', 'NIRQ0LPDRPU',
-        'NFIQ1LPDRPU', 'NIRQ1LPDRPU',
+    SAXIGP0: In(AXI3(32, 32, 6))
+    SAXIGP0ACLK: In(1)
+    SAXIGP0ARESETN: Out(1)
+    SAXIGP0ARQOS: In(4)
+    SAXIGP0AWQOS: In(4)
+    SAXIGP1: In(AXI3(32, 32, 6))
+    SAXIGP1ACLK: In(1)
+    SAXIGP1ARESETN: Out(1)
+    SAXIGP1ARQOS: In(4)
+    SAXIGP1AWQOS: In(4)
+
+    SAXIHP0: In(AXI3(64, 32, 6))
+    SAXIHP0ACLK: In(1)
+    SAXIHP0ARESETN: Out(1)
+    SAXIHP0RACOUNT: Out(3)
+    SAXIHP0RCOUNT: Out(8)
+    SAXIHP0WACOUNT: Out(6)
+    SAXIHP0WCOUNT: Out(8)
+    SAXIHP0ARQOS: In(4)
+    SAXIHP0AWQOS: In(4)
+    SAXIHP0RDISSUECAP1EN: In(1)
+    SAXIHP0WRISSUECAP1EN: In(1)
+    SAXIHP1: In(AXI3(64, 32, 6))
+    SAXIHP1ACLK: In(1)
+    SAXIHP1ARESETN: Out(1)
+    SAXIHP1RACOUNT: Out(3)
+    SAXIHP1RCOUNT: Out(8)
+    SAXIHP1WACOUNT: Out(6)
+    SAXIHP1WCOUNT: Out(8)
+    SAXIHP1ARQOS: In(4)
+    SAXIHP1AWQOS: In(4)
+    SAXIHP1RDISSUECAP1EN: In(1)
+    SAXIHP1WRISSUECAP1EN: In(1)
+    SAXIHP2: In(AXI3(64, 32, 6))
+    SAXIHP2ACLK: In(1)
+    SAXIHP2ARESETN: Out(1)
+    SAXIHP2RACOUNT: Out(3)
+    SAXIHP2RCOUNT: Out(8)
+    SAXIHP2WACOUNT: Out(6)
+    SAXIHP2WCOUNT: Out(8)
+    SAXIHP2ARQOS: In(4)
+    SAXIHP2AWQOS: In(4)
+    SAXIHP2RDISSUECAP1EN: In(1)
+    SAXIHP2WRISSUECAP1EN: In(1)
+    SAXIHP3: In(AXI3(64, 32, 6))
+    SAXIHP3ACLK: In(1)
+    SAXIHP3ARESETN: Out(1)
+    SAXIHP3RACOUNT: Out(3)
+    SAXIHP3RCOUNT: Out(8)
+    SAXIHP3WACOUNT: Out(6)
+    SAXIHP3WCOUNT: Out(8)
+    SAXIHP3ARQOS: In(4)
+    SAXIHP3AWQOS: In(4)
+    SAXIHP3RDISSUECAP1EN: In(1)
+    SAXIHP3WRISSUECAP1EN: In(1)
+
+    EMIOCAN0: Out(CAN())
+    EMIOCAN1: Out(CAN())
+    EMIOI2C0: Out(I2C())
+    EMIOI2C1: Out(I2C())
+    EMIOSPI0: Out(SPI())
+    EMIOSPI1: Out(SPI())
+    EMIOUART0: Out(UART())
+    EMIOUART1: Out(UART())
+    EMIOGPIO: Out(GPIO(64))
+    EMIOTTC0: Out(TTC())
+    EMIOTTC1: Out(TTC())
+    EMIOWDT: Out(WDT())
+    EMIOPJTAG: Out(PJTag_PS7())
+    EMIOUSB0: Out(USB_PS7())
+    EMIOUSB1: Out(USB_PS7())
+
+    DMA0: Out(DMA_PS7())
+    DMA1: Out(DMA_PS7())
+    DMA2: Out(DMA_PS7())
+    DMA3: Out(DMA_PS7())
+
+    EMIOENET0: Out(ENET_PS7())
+    EMIOENET1: Out(ENET_PS7())
+    EMIOSDIO0: Out(SDIO_PS7())
+    EMIOSDIO1: Out(SDIO_PS7())
+
+    # Trace
+    EMIOTRACECTL: Out(1)
+    EMIOTRACEDATA: Out(32)
+    EMIOTRACECLK: In(1)
+
+    # SRAM
+    EMIOSRAMINTIN: In(1)
+
+    # PL Clock and Reset
+    FCLKCLK: Out(4)
+    FCLKCLKTRIGN: In(4)
+    FCLKRESETN: Out(4)
+
+    # PL Idle
+    FPGAIDLEN: In(1)
+
+    # Event
+    EVENTEVENTI: In(1)
+    EVENTEVENTO: Out(1)
+    EVENTSTANDBYWFE: Out(2)
+    EVENTSTANDBYWFI: Out(2)
+
+    # DDR ARB
+    DDRARB: In(4)
+
+    # PL Trace
+    FTMDTRACEINDATA: In(32)
+    FTMDTRACEINVALID: In(1)
+    FTMDTRACEINCLOCK: In(1)
+    FTMDTRACEINATID: In(4)
+
+    # Cross Trigger
+    FTMTF2PTRIG: In(4)
+    FTMTF2PTRIGACK: Out(4)
+    FTMTP2FDEBUG: Out(32)
+    FTMTP2FTRIG: Out(4)
+    FTMTP2FTRIGACK: In(4)
+    FTMTF2PDEBUG: In(32)
+
+    # Interrupts
+    IRQP2F: Out(29)
+    IRQF2P: In(20)
+
+    _BIDIRECTIONAL_PORTS = [
+        ("DDRA", 15),
+        ("DDRBA", 3),
+        ("DDRCASB", 1),
+        ("DDRCKE", 1),
+        ("DDRCKN", 1),
+        ("DDRCKP", 1),
+        ("DDRCSB", 1),
+        ("DDRDM", 4),
+        ("DDRDQ", 32),
+        ("DDRDQSN", 4),
+        ("DDRDQSP", 4),
+        ("DDRDRSTB", 1),
+        ("DDRODT", 1),
+        ("DDRRASB", 1),
+        ("DDRVRN", 1),
+        ("DDRVRP", 1),
+        ("DDRWEB", 1),
+        ("MIO", 54),
+        ("PSCLK", 1),
+        ("PSPORB", 1),
+        ("PSSRSTB", 1),
     ]
 
     def __init__(self):
-        self._ports = self._get_ps_ports(get_ps_layout())
+        super().__init__()
         self._clocks = [None for _ in range(4)]
         self._resets = [None for _ in range(4)]
         self._irqs = [None for _ in range(16)]
-
-    def _get_instance_ports(self):
-        ports = {}
-        for pin, signal in self._ports.items():
-            if signal.dir == 'input':
-                prefix = 'i_'
-            elif signal.dir == 'output':
-                prefix = 'o_'
-            else:
-                prefix = 'o_'
-            ports[prefix + pin] = signal
-        return ports
-
-    def _get_ps_ports(self, layout):
-        return {
-            pin: PsSignal(width, name=pin.lower(), reset=pin in self.DEFAULT_ONE, dir=direction)
-            for pin, width, direction in layout
-        }
 
     def get_clock_signal(self, n, freq):
         assert n < 4
@@ -58,13 +192,6 @@ class ZynqPS(Elaboratable):
         self._clocks[n] = (clk, freq)
         return clk
 
-    def get_reset_signal(self, n):
-        assert n < 4
-        assert self._resets[n] is None, ('Clock already taken')
-        rst = Signal(name='pl_reset{}'.format(n))
-        self._resets[n] = rst
-        return rst
-
     def get_irq_signal(self, n):
         assert n < 16
         assert self._irqs[n] is None, ('IRQ already taken')
@@ -72,16 +199,28 @@ class ZynqPS(Elaboratable):
         self._irqs[n] = irq
         return irq
 
-    def get_axi(self, axi):
-        assert axi in self.MAXI + self.SAXI
-        if axi in self.MAXI:
-            layout = get_axi_layout('master')
-        elif axi in self.SAXI:
-            layout = get_axi_layout('slave')
-        fields = {f: self._ports[axi.upper() + f] for f, w, d in layout}
-        layout = [(f, w) for f, w, _ in layout]
-        rec = Record(layout, fields=fields, name=axi)
-        return rec
+    def get_reset_signal(self, n):
+        assert n < 4
+        assert self._resets[n] is None, ('Reset already taken')
+        rst = Signal(name='pl_reset{}'.format(n))
+        self._resets[n] = rst
+        return rst
+
+    def _get_instance_ports(self):
+        ports = {}
+        for name, sig in self.signature.members.items():
+            if sig.is_port:
+                ports[('i_' if sig.flow == In else 'o_') + name] = getattr(self, name)
+            else:
+                ports.update(getattr(self, name).get_ports_for_instance(name))
+        ports["o_MAXIGP0ARSIZE"] = ports["o_MAXIGP0ARSIZE"][:2]
+        ports["o_MAXIGP0AWSIZE"] = ports["o_MAXIGP0AWSIZE"][:2]
+        ports["o_MAXIGP1ARSIZE"] = ports["o_MAXIGP1ARSIZE"][:2]
+        ports["o_MAXIGP1AWSIZE"] = ports["o_MAXIGP1AWSIZE"][:2]
+        for name, sz in self._BIDIRECTIONAL_PORTS:
+            ports['o_' + name] = Signal(sz, name=name)
+            # ports['io_' + name] = Signal(sz, name=name)
+        return ports
 
     def elaborate(self, platform):
         m = Module()
@@ -91,7 +230,7 @@ class ZynqPS(Elaboratable):
                 unbuf = Signal(name='pl_clk{}_unbuf'.format(i))
                 platform.add_clock_constraint(unbuf, freq)
 
-                m.d.comb += unbuf.eq(self._ports[self.CLK][i])
+                m.d.comb += unbuf.eq(self.FCLKCLK[i])
                 buf = Instance(
                     'BUFG',
                      i_I=unbuf,
@@ -101,11 +240,11 @@ class ZynqPS(Elaboratable):
 
         for i, rst in enumerate(self._resets):
             if rst is not None:
-                m.d.comb += rst.eq(~self._ports['EMIOGPIOO'][-1 - i])
+                m.d.comb += rst.eq(~self.EMIOGPIO.O[-1 - i])
 
         for i, irq in enumerate(self._irqs):
             if irq is not None:
-                m.d.comb += self._ports[self.IRQ][i % 16].eq(irq)
+                m.d.comb += self.IRQF2P[i % 16].eq(irq)
 
         ps_i = Instance(
             'PS7',
@@ -114,5 +253,4 @@ class ZynqPS(Elaboratable):
         )
 
         m.submodules.ps_i = ps_i
-
         return m

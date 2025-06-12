@@ -59,7 +59,7 @@ class PsZynqMP(Elaboratable):
     def get_reset_signal(self, n):
         assert n < 4
         assert self._resets[n] is None, (
-            'Clock already taken')
+            'Reset already taken')
         rst = Signal(name='pl_reset{}'.format(n))
         self._resets[n] = rst
         return rst

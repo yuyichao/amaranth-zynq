@@ -297,3 +297,255 @@ class ZedboardPlatform(ZynqPlatform):
             #"dx_p": "N11",  # Termal Diode diff pair P
         }),
     ]
+
+
+class ZC702Platform(ZynqPlatform):
+    device = "xc7z020"
+    package = "clg484"
+    speed = "1"
+    default_clk = "clk156"
+
+    def __init__(self, *args, VADJ="2V5", **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not VADJ in ("1V8", "2V5", "3V3"):
+            raise RuntimeError("VADJ must be \"1V8\", \"2V5\", or \"3V3\"")
+
+        self._VADJ = VADJ
+
+    def bank_iostandard(self):
+        if self._VADJ == "1V8":
+            return "LVCMOS18"
+        elif self._VADJ == "2V5":
+            return "LVCMOS25"
+        elif self._VADJ == "3V3":
+            return "LVCMOS33"
+
+    def bank_iostandard_ds(self):
+        if self._VADJ == "1V8":
+            return "LVDS18"
+        elif self._VADJ == "2V5":
+            return "LVDS25"
+        elif self._VADJ == "3V3":
+            return "LVDS33"
+
+    """
+    Add ZC702 PL resources via following documentations:
+        https://docs.amd.com/v/u/en-US/ug850-zc702-eval-bd
+    """
+    resources = [
+        Resource("sysclk", 0, DiffPairs("C19", "D18", dir="i"),
+                 Clock(200e6), Attrs(IOSTANDARD=bank_iostandard_ds)),
+        Resource("clk156", 0, DiffPairs("Y8", "Y9", dir="i"),
+                 Clock(156e6), Attrs(IOSTANDARD=bank_iostandard_ds)),
+
+        # HDMI Output
+        Resource("hdmi", 0, # ADV7511
+            Subsignal("de",  Pins("T18",  dir="o")),     # HD-DE, Data Enable
+            Subsignal("spdif", Pins("R15", dir="o")),    # HD-SPDIF, Sony/Philips audio in
+            Subsignal("clk", Pins("L16",  dir="o")),     # HD-CLK, Video Clock
+            Subsignal("vs",  Pins("H15",  dir="o")),     # HD-VSYNC, Vertical Sync
+            Subsignal("hs",  Pins("R18",  dir="o")),     # HD-HSYNC, Horizontal Sync
+            Subsignal("int", Pins("U14",  dir="i")),     # HD-INT, Interupt signal
+            Subsignal("spdifo", Pins("H20", dir="i")), # HD-SPDIFO, Sony/Philips audio out
+            Subsignal("yuv", Pins("AB21 AA21 AB22 AA22 V19 V18 V20 U20 W21 W20 W18 T19 U19 R19 T17 T16", dir="o")),  # HD-D[15:0], Video Data in YCbCr 4:2:2 format
+            Attrs(IOSTANDARD=bank_iostandard)
+        ),
+
+        *LEDResources(pins={
+            19: "1",
+            20: "2",
+            21: "3",
+            22: "3",
+        }, conn=("pmod", 0), attrs=Attrs(IOSTANDARD=bank_iostandard)),
+
+        *LEDResources(pins={
+            18: "1",
+            17: "2",
+            16: "3",
+            15: "3",
+        }, conn=("pmod", 1), attrs=Attrs(IOSTANDARD=bank_iostandard)),
+
+        *ButtonResources(pins={0: "G19", 1: "F19"},
+                         attrs=Attrs(IO_STANDARD=bank_iostandard)),
+
+        # User DIP Switches
+        *SwitchResources(pins={
+            0: "W6",   # SW0
+            1: "W7",   # SW1
+        }, attrs=Attrs(IOSTANDARD=bank_iostandard)),
+    ]
+
+    connectors = [
+                             #J1  J2  J3  J4      J7   J8   J9  J10
+        Connector("pmod", 0, "E15 D15 W17 W5  - - - - - - - -"),
+        Connector("pmod", 1, "V7  W10 P18 P17 - - - - - - - -"),
+
+        # FMC1 (J3)
+        Connector("fmc", 0, {
+            ## C
+            "LA06_P": "J18", # C10
+            "LA06_N": "K18", # C11
+            "LA10_P": "L17", # C14
+            "LA10_N": "M17", # C15
+            "LA14_P": "J16", # C18
+            "LA14_N": "J17", # C19
+            "LA18_CC_P": "D20", # C22
+            "LA18_CC_N": "C20", # C23
+            "LA27_P": "C17", # C26
+            "LA27_N": "C18", # C27
+
+            # D
+            "LA00_CC_P": "N19", # D8
+            "LA01_CC_N": "N20", # D9
+            "LA05_P": "N17", # D11
+            "LA05_N": "N18", # D12
+            "LA09_P": "M15", # D14
+            "LA09_N": "M16", # D15
+            "LA13_P": "P16", # D17
+            "LA13_N": "R16", # D18
+            "LA17_CC_P": "B19", # D20
+            "LA17_CC_N": "B20", # D21
+            "LA23_P": "G15", # D23
+            "LA23_N": "G16", # D24
+            "LA26_P": "F18", # D26
+            "LA26_N": "E18", # D27
+
+            # G
+            "CLK1_P": "M19", # G2
+            "CLK1_N": "M20", # G3
+            "LA00_CC_P": "K19", # G6
+            "LA00_CC_N": "K20", # G7
+            "LA03_P": "J20", # G9
+            "LA03_N": "K21", # G10
+            "LA08_P": "J21", # G12
+            "LA08_N": "J22", # G13
+            "LA12_P": "N22", # G15
+            "LA12_N": "P22", # G16
+            "LA16_P": "N15", # G18
+            "LA16_N": "P15", # G19
+            "LA20_P": "G20", # G21
+            "LA20_N": "G21", # G22
+            "LA22_P": "G17", # G24
+            "LA22_N": "F17", # G25
+            "LA25_P": "C15", # G27
+            "LA25_N": "B15", # G28
+            "LA29_P": "B16", # G30
+            "LA29_N": "B17", # G31
+            "LA31_P": "A16", # G33
+            "LA31_N": "A17", # G34
+            "LA33_P": "A18", # G36
+            "LA33_N": "A19", # G37
+
+            # H
+            "CLK0_P": "L18", # H4
+            "CLK0_N": "L19", # H5
+            "LA02_P": "L21", # H7
+            "LA02_N": "L22", # H8
+            "LA04_P": "M21", # H10
+            "LA04_N": "M22", # H11
+            "LA07_P": "J15", # H13
+            "LA07_N": "K15", # H14
+            "LA11_P": "R20", # H16
+            "LA11_N": "R21", # H17
+            "LA15_P": "P20", # H19
+            "LA15_N": "P21", # H20
+            "LA19_P": "E19", # H22
+            "LA19_N": "E20", # H23
+            "LA21_P": "F21", # H25
+            "LA21_N": "F22", # H26
+            "LA24_P": "A21", # H28
+            "LA24_N": "A22", # H29
+            "LA28_P": "D22", # H31
+            "LA28_N": "C22", # H32
+            "LA30_P": "E21", # H34
+            "LA30_N": "D21", # H35
+            "LA32_P": "B21", # H37
+            "LA32_N": "B22", # H38
+        }),
+
+        # FMC2 (J4)
+        Connector("fmc", 1, {
+            ## C
+            "LA06_P": "U17", # C10
+            "LA06_N": "V17", # C11
+            "LA10_P": "Y20", # C14
+            "LA10_N": "Y21", # C15
+            "LA14_P": "T22", # C18
+            "LA14_N": "U22", # C19
+            "LA18_CC_P": "AA9", # C22
+            "LA18_CC_N": "AA8", # C23
+            "LA27_P": "AB2", # C26
+            "LA27_N": "AB1", # C27
+
+            # D
+            "LA00_CC_P": "W16", # D8
+            "LA01_CC_N": "Y16", # D9
+            "LA05_P": "AB19", # D11
+            "LA05_N": "AB20", # D12
+            "LA09_P": "U15", # D14
+            "LA09_N": "U16", # D15
+            "LA13_P": "V22", # D17
+            "LA13_N": "W22", # D18
+            "LA17_CC_P": "AA7", # D20
+            "LA17_CC_N": "AA6", # D21
+            "LA23_P": "V12", # D23
+            "LA23_N": "W12", # D24
+            "LA26_P": "U12", # D26
+            "LA26_N": "U11", # D27
+
+            # G
+            "CLK1_P": "Y6", # G2
+            "CLK1_N": "Y5", # G3
+            "LA00_CC_P": "Y19", # G6
+            "LA00_CC_N": "AA19", # G7
+            "LA03_P": "AA16", # G9
+            "LA03_N": "AB16", # G10
+            "LA08_P": "AA17", # G12
+            "LA08_N": "AB17", # G13
+            "LA12_P": "W15", # G15
+            "LA12_N": "Y15", # G16
+            "LA16_P": "AB14", # G18
+            "LA16_N": "AB15", # G19
+            "LA20_P": "T4", # G21
+            "LA20_N": "U4", # G22
+            "LA22_P": "U10", # G24
+            "LA22_N": "U9", # G25
+            "LA25_P": "AA12", # G27
+            "LA25_N": "AB12", # G28
+            "LA29_P": "AA11", # G30
+            "LA29_N": "AB11", # G31
+            "LA31_P": "AB10", # G33
+            "LA31_N": "AB9", # G34
+            "LA33_P": "Y11", # G36
+            "LA33_N": "Y10", # G37
+
+            # H
+            "CLK0_P": "Y18", # H4
+            "CLK0_N": "AA18", # H5
+            "LA02_P": "V14", # H7
+            "LA02_N": "V15", # H8
+            "LA04_P": "V13", # H10
+            "LA04_N": "W13", # H11
+            "LA07_P": "T21", # H13
+            "LA07_N": "U21", # H14
+            "LA11_P": "Y14", # H16
+            "LA11_N": "AA14", # H17
+            "LA15_P": "Y13", # H19
+            "LA15_N": "AA13", # H20
+            "LA19_P": "R6", # H22
+            "LA19_N": "T6", # H23
+            "LA21_P": "V5", # H25
+            "LA21_N": "V4", # H26
+            "LA24_P": "U6", # H28
+            "LA24_N": "U5", # H29
+            "LA28_P": "AB5", # H31
+            "LA28_N": "AB4", # H32
+            "LA30_P": "AB7", # H34
+            "LA30_N": "AB6", # H35
+            "LA32_P": "Y4", # H37
+            "LA32_N": "AA4", # H38
+        }),
+
+        # TODO: XADC
+    ]

@@ -1,12 +1,12 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
-from amaranth_zynq.ps8.ps import PsZynqMP
-from amaranth_zynq.ps8.plat import ZynqMPPlatform
+from amaranth_zynq.ps8 import PsZynqMP
+from amaranth_zynq.platform import ZynqPlatform
 from amaranth_wb2axip import AXI2AXILite, AXILiteXBar, DemoAXI
 
 
-class Zu3egPlatform(ZynqMPPlatform):
+class Zu3egPlatform(ZynqPlatform):
     device     = 'xczu3eg'
     package    = 'sfva625'
     speed      = '1-e'
@@ -46,5 +46,10 @@ class AXIExample(Elaboratable):
 
 
 core = AXIExample()
-plat = Zu3egPlatform()
+plat = Zu3egPlatform(bif=r"""
+            all:
+            {
+                [destination_device = pl] {{name}}.bit
+            }
+        """)
 plat.build(core)

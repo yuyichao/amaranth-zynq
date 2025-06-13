@@ -8,9 +8,9 @@ from amaranth.lib.wiring import In, Out
 from amaranth_wb2axip import AXI3
 from amaranth_zynq.interfaces import *
 
-__all__ = ['ZynqPS']
+__all__ = ['PsZynq']
 
-class ZynqPS(wiring.Component):
+class PsZynq(wiring.Component):
     MAXIGP0: Out(AXI3(32, 32, 12))
     MAXIGP0ACLK: In(1)
     MAXIGP0ARESETN: Out(1)

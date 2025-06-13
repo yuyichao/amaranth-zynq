@@ -1,2 +1,1 @@
-from .pl import ZynqPL
-from .ps import ZynqPS
+from .ps import PsZynq

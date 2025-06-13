@@ -2,14 +2,10 @@ from amaranth import *
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth.build import *
 from amaranth_boards.resources import *
-from amaranth_zynq.ps7 import ZynqPS, ZynqPL
+from amaranth_zynq.platform import ZynqPlatform
+from amaranth_zynq.ps7 import PsZynq
 
-__all__ = ["ZedboardPS", "ZedboardPlatform"]
-
-class ZedboardPS(ZynqPS):
-    pass
-
-class ZedboardPlatform(ZynqPL):
+class ZedboardPlatform(ZynqPlatform):
     device = "xc7z020"
     package = "clg484"
     speed = "1"
@@ -156,23 +152,11 @@ class ZedboardPlatform(ZynqPL):
         }),
     ]
 
-    def __init__(self, bif=None):
-        super().__init__(bif)
-
-    def toolchain_prepare(self, products, name, **kwargs):
-        overrides = {
-            "": "",
-        }
-        return super().toolchain_prepare(products, name, **overrides, **kwargs)
-
-    def toolchain_program(self, products, name, **kwargs):
-        return super().toolchain_program(products, name, **kwargs)
-
 class Zedboard(Elaboratable):
     def elaborate(self, platform):
         m = Module()
         m.domains += ClockDomain("sync")
-        m.submodules.ps = ps = ZedboardPS()
+        m.submodules.ps = ps = PsZynq()
 
         cnt = Signal(29)
         m.d.sync += cnt.eq(cnt + 1)

@@ -1,20 +1,9 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
-from amaranth_zynq.platform import ZynqPlatform
+from amaranth_zynq.platform import ZedboardPlatform
 from amaranth_zynq.ps7 import PsZynq
 from amaranth_wb2axip import AXI32AXI, AXI2AXILite, AXILiteXBar, DemoAXI
-from urllib import request
-
-class ZedboardPlatform(ZynqPlatform):
-    device = "xc7z020"
-    package = "clg484"
-    speed = "1"
-    default_clk = "GCLK"    # Use GCLK as PL clock source
-    default_rst = "BTNU"    # Use BTNU as PL reset signal
-
-    connectors = []
-    resources = []
 
 
 class AXIExample(Elaboratable):

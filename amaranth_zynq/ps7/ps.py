@@ -252,16 +252,12 @@ class PsZynq(wiring.Component):
         for i, val in enumerate(self._clocks):
             if val is not None:
                 clk, freq = val
-                unbuf = Signal(name='pl_clk{}_unbuf'.format(i))
+                unbuf = Signal(name=f'pl_clk{i}_unbuf')
                 platform.add_clock_constraint(unbuf, freq)
 
                 m.d.comb += unbuf.eq(self.FCLKCLK[i])
-                buf = Instance(
-                    'BUFG',
-                     i_I=unbuf,
-                     o_O=clk
-                );
-                m.submodules['clk{}_buffer'.format(i)] = buf
+                buf = Instance('BUFG', i_I=unbuf, o_O=clk)
+                m.submodules[f'clk{i}_buffer'] = buf
 
         for i, rst in enumerate(self._resets):
             if rst is not None:

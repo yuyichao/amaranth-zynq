@@ -240,7 +240,7 @@ class PsZynq(wiring.Component):
 
         for i, rst in enumerate(self._resets):
             if rst is not None:
-                m.d.comb += rst.eq(~self.EMIOGPIO.O[-1 - i])
+                m.d.comb += rst.eq(~self.FCLKRESETN[i])
 
         for i, irq in enumerate(self._irqs):
             if irq is not None:

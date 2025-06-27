@@ -241,6 +241,7 @@ class PsZynq(wiring.Component):
 
             fix_cache(f"o_{maxigp}ARCACHE")
             fix_cache(f"o_{maxigp}AWCACHE")
+            ports[f"o_{maxigp}WID"] = Signal(12, name=f"{maxigp}WID")
         for name, sz in self._BIDIRECTIONAL_PORTS:
             ports['o_' + name] = Signal(sz, name=name)
             # ports['io_' + name] = Signal(sz, name=name)

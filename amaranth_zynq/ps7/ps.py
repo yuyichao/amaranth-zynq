@@ -1,26 +1,22 @@
 #
 
-from amaranth import Signal, Module, Instance
+from amaranth import *
 from amaranth.hdl import IOPort
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 
-from amaranth_wb2axip import AXI3
+from amaranth_wb2axip import AXI3, AXI4
 from amaranth_zynq.interfaces import *
 
 __all__ = ['PsZynq']
 
 class PsZynq(wiring.Component):
-    MAXIGP0: Out(AXI3(32, 32, 12))
+    MAXIGP0: Out(AXI4(32, 32, 12))
     MAXIGP0ACLK: In(1)
     MAXIGP0ARESETN: Out(1)
-    MAXIGP0ARQOS: Out(4)
-    MAXIGP0AWQOS: Out(4)
-    MAXIGP1: Out(AXI3(32, 32, 12))
+    MAXIGP1: Out(AXI4(32, 32, 12))
     MAXIGP1ACLK: In(1)
     MAXIGP1ARESETN: Out(1)
-    MAXIGP1ARQOS: Out(4)
-    MAXIGP1AWQOS: Out(4)
 
     SAXIACP: In(AXI3(64, 32, 3))
     SAXIACPARESETN: Out(1)
@@ -206,17 +202,45 @@ class PsZynq(wiring.Component):
         self._resets[n] = rst
         return rst
 
-    def _get_instance_ports(self):
+    def _get_instance_ports(self, m):
         ports = {}
         for name, sig in self.signature.members.items():
             if sig.is_port:
                 ports[('i_' if sig.flow == In else 'o_') + name] = getattr(self, name)
             else:
                 ports.update(getattr(self, name).get_ports_for_instance(name))
-        ports["o_MAXIGP0ARSIZE"] = ports["o_MAXIGP0ARSIZE"][:2]
-        ports["o_MAXIGP0AWSIZE"] = ports["o_MAXIGP0AWSIZE"][:2]
-        ports["o_MAXIGP1ARSIZE"] = ports["o_MAXIGP1ARSIZE"][:2]
-        ports["o_MAXIGP1AWSIZE"] = ports["o_MAXIGP1AWSIZE"][:2]
+        def expand_oport(port_name, sz):
+            port = ports[port_name]
+            if sz == 0:
+                del ports[port_name]
+            else:
+                ports[port_name] = port[:sz]
+            m.d.comb += port[sz:].eq(0)
+        def shrink_oport(port_name, sz):
+            port = ports[port_name]
+            assert len(port) < sz
+            dummy = Signal(sz - len(port))
+            ports[port_name] = Cat(port, dummy)
+        def fix_cache(name):
+            m_port = ports[name]
+            i_port = Signal(4, name=name)
+            ports[name] = i_port
+            m.d.comb += m_port.eq(Cat(i_port[0], Const(1), i_port[2:]))
+        for maxigp in ("MAXIGP0", "MAXIGP1"):
+            expand_oport(f"o_{maxigp}ARSIZE", 2)
+            expand_oport(f"o_{maxigp}AWSIZE", 2)
+            expand_oport(f"o_{maxigp}ARLEN", 4)
+            expand_oport(f"o_{maxigp}AWLEN", 4)
+
+            # Currently not defined by wb2axip
+            # expand_oport(f"o_{maxigp}ARREGION", 0)
+            # expand_oport(f"o_{maxigp}AWREGION", 0)
+
+            shrink_oport(f"o_{maxigp}ARLOCK", 2)
+            shrink_oport(f"o_{maxigp}AWLOCK", 2)
+
+            fix_cache(f"o_{maxigp}ARCACHE")
+            fix_cache(f"o_{maxigp}AWCACHE")
         for name, sz in self._BIDIRECTIONAL_PORTS:
             ports['o_' + name] = Signal(sz, name=name)
             # ports['io_' + name] = Signal(sz, name=name)
@@ -249,7 +273,7 @@ class PsZynq(wiring.Component):
         ps_i = Instance(
             'PS7',
             a_DONT_TOUCH="true",
-            **self._get_instance_ports(),
+            **self._get_instance_ports(m),
         )
 
         m.submodules.ps_i = ps_i

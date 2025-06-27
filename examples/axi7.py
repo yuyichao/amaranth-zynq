@@ -18,18 +18,13 @@ class AXIExample(Elaboratable):
         reset_sync = ResetSynchronizer(reset, domain="sync")
         m.submodules.reset_sync = reset_sync
 
-        axi3_master = ps.MAXIGP1
+        axi_master = ps.MAXIGP1
         m.d.comb += ps.MAXIGP1ACLK.eq(clk)
-
-        m.submodules.axi32axi = axi32axi = AXI32AXI(data_width=32,
-                                                    addr_width=32,
-                                                    id_width=12)
-        wiring.connect(m, axi3_master, axi32axi.axi3)
 
         m.submodules.axi2axil = axi2axil = AXI2AXILite(data_width=32,
                                                        addr_width=32,
                                                        id_width=12)
-        wiring.connect(m, axi32axi.axi, axi2axil.axi)
+        wiring.connect(m, axi_master, axi2axil.axi)
 
         xbar = AXILiteXBar(data_width=32, addr_width=32)
         m.submodules.xbar = xbar

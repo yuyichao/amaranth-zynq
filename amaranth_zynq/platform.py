@@ -5,7 +5,7 @@ from amaranth.vendor import XilinxPlatform
 
 from amaranth_boards.resources import *
 
-class ZynqPlatform(XilinxPlatform):
+class XilinxSoCPlatform(XilinxPlatform):
     def __init__(self, bif=None, **kwargs):
         self._bif = bif
         super().__init__(**kwargs)
@@ -49,7 +49,7 @@ class ZynqPlatform(XilinxPlatform):
             cmds = [ *cmds, bootgencmd ]
         return cmds
 
-class ZedboardPlatform(ZynqPlatform):
+class ZedboardPlatform(XilinxSoCPlatform):
     device = "xc7z020"
     package = "clg484"
     speed = "1"
@@ -299,7 +299,7 @@ class ZedboardPlatform(ZynqPlatform):
     ]
 
 
-class ZC702Platform(ZynqPlatform):
+class ZC702Platform(XilinxSoCPlatform):
     device = "xc7z020"
     package = "clg484"
     speed = "1"

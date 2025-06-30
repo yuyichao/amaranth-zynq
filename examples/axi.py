@@ -2,11 +2,11 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth_zynq.ps8 import PsZynqMP
-from amaranth_zynq.platform import ZynqPlatform
+from amaranth_zynq.platform import XilinxSoCPlatform
 from amaranth_wb2axip import AXI2AXILite, AXILiteXBar, DemoAXI
 
 
-class Zu3egPlatform(ZynqPlatform):
+class Zu3egPlatform(XilinxSoCPlatform):
     device     = 'xczu3eg'
     package    = 'sfva625'
     speed      = '1-e'

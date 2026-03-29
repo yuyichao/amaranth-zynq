@@ -5,7 +5,7 @@ from amaranth.hdl import IOPort
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 
-from amaranth_wb2axip import AXI4, ACE
+from amaranth_axi import AXI4, ACE
 from amaranth_zynq.interfaces import *
 
 class PsZynqMP(wiring.Component):

@@ -3,7 +3,7 @@ from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth_zynq.ps8 import PsZynqMP
 from amaranth_zynq.platform import XilinxSoCPlatform
-from amaranth_wb2axip import AXI2AXILite, AXILiteXBar, DemoAXI
+from amaranth_axi import AXI2AXILite, AXILiteXBar, DemoAXI
 
 
 class Zu3egPlatform(XilinxSoCPlatform):

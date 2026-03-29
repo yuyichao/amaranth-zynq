@@ -3,7 +3,7 @@ from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
 from amaranth_zynq.platform import ZedboardPlatform
 from amaranth_zynq.ps7 import PsZynq
-from amaranth_wb2axip import AXI32AXI, AXI2AXILite, AXILiteXBar, DemoAXI
+from amaranth_axi import AXI32AXI, AXI2AXILite, AXILiteXBar, DemoAXI
 
 
 class AXIExample(Elaboratable):

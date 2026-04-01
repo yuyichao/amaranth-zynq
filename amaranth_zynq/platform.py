@@ -206,7 +206,7 @@ class ZedboardPlatform(XilinxSoCPlatform):
             "LA00_CC_N": "M20",
             "LA00_CC_P": "M19",
             "LA01_CC_N": "N20",
-            "LA00_CC_P": "N19",
+            "LA01_CC_P": "N19",
             "LA02_N": "P18",
             "LA02_P": "P17",
             "LA03_N": "P22",
@@ -396,7 +396,7 @@ class ZC702Platform(XilinxSoCPlatform):
             "LA27_N": "C18", # C27
 
             # D
-            "LA00_CC_P": "N19", # D8
+            "LA01_CC_P": "N19", # D8
             "LA01_CC_N": "N20", # D9
             "LA05_P": "N17", # D11
             "LA05_N": "N18", # D12
@@ -479,7 +479,7 @@ class ZC702Platform(XilinxSoCPlatform):
             "LA27_N": "AB1", # C27
 
             # D
-            "LA00_CC_P": "W16", # D8
+            "LA01_CC_P": "W16", # D8
             "LA01_CC_N": "Y16", # D9
             "LA05_P": "AB19", # D11
             "LA05_N": "AB20", # D12

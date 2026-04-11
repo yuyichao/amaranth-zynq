@@ -201,12 +201,12 @@ class ZedboardPlatform(XilinxSoCPlatform):
             "PRSNT": "AB14",
 
             # Bank 34
-            "CLK0_N": "L19",
-            "CLK0_P": "L18",
-            "LA00_CC_N": "M20",
-            "LA00_CC_P": "M19",
-            "LA01_CC_N": "N20",
-            "LA01_CC_P": "N19",
+            "CLK0_M2C_N": "L19",
+            "CLK0_M2C_P": "L18",
+            "LA00_N_CC": "M20",
+            "LA00_P_CC": "M19",
+            "LA01_N_CC": "N20",
+            "LA01_P_CC": "N19",
             "LA02_N": "P18",
             "LA02_P": "P17",
             "LA03_N": "P22",
@@ -239,12 +239,12 @@ class ZedboardPlatform(XilinxSoCPlatform):
             "LA16_P": "J20",
 
             # Bank 35
-            "CLK1_N": "C19",
-            "CLK1_P": "D18",
-            "LA17_CC_N": "B20",
-            "LA17_CC_P": "B19",
-            "LA18_CC_N": "C20",
-            "LA18_CC_P": "D20",
+            "CLK1_M2C_N": "C19",
+            "CLK1_M2C_P": "D18",
+            "LA17_N_CC": "B20",
+            "LA17_P_CC": "B19",
+            "LA18_N_CC": "C20",
+            "LA18_P_CC": "D20",
             "LA19_N": "G16",
             "LA19_P": "G15",
             "LA20_N": "G21",
@@ -390,32 +390,32 @@ class ZC702Platform(XilinxSoCPlatform):
             "LA10_N": "M17", # C15
             "LA14_P": "J16", # C18
             "LA14_N": "J17", # C19
-            "LA18_CC_P": "D20", # C22
-            "LA18_CC_N": "C20", # C23
+            "LA18_P_CC": "D20", # C22
+            "LA18_N_CC": "C20", # C23
             "LA27_P": "C17", # C26
             "LA27_N": "C18", # C27
 
             # D
-            "LA01_CC_P": "N19", # D8
-            "LA01_CC_N": "N20", # D9
+            "LA01_P_CC": "N19", # D8
+            "LA01_N_CC": "N20", # D9
             "LA05_P": "N17", # D11
             "LA05_N": "N18", # D12
             "LA09_P": "M15", # D14
             "LA09_N": "M16", # D15
             "LA13_P": "P16", # D17
             "LA13_N": "R16", # D18
-            "LA17_CC_P": "B19", # D20
-            "LA17_CC_N": "B20", # D21
+            "LA17_P_CC": "B19", # D20
+            "LA17_N_CC": "B20", # D21
             "LA23_P": "G15", # D23
             "LA23_N": "G16", # D24
             "LA26_P": "F18", # D26
             "LA26_N": "E18", # D27
 
             # G
-            "CLK1_P": "M19", # G2
-            "CLK1_N": "M20", # G3
-            "LA00_CC_P": "K19", # G6
-            "LA00_CC_N": "K20", # G7
+            "CLK1_M2C_P": "M19", # G2
+            "CLK1_M2C_N": "M20", # G3
+            "LA00_P_CC": "K19", # G6
+            "LA00_N_CC": "K20", # G7
             "LA03_P": "J20", # G9
             "LA03_N": "K21", # G10
             "LA08_P": "J21", # G12
@@ -438,8 +438,8 @@ class ZC702Platform(XilinxSoCPlatform):
             "LA33_N": "A19", # G37
 
             # H
-            "CLK0_P": "L18", # H4
-            "CLK0_N": "L19", # H5
+            "CLK0_M2C_P": "L18", # H4
+            "CLK0_M2C_N": "L19", # H5
             "LA02_P": "L21", # H7
             "LA02_N": "L22", # H8
             "LA04_P": "M21", # H10
@@ -473,32 +473,32 @@ class ZC702Platform(XilinxSoCPlatform):
             "LA10_N": "Y21", # C15
             "LA14_P": "T22", # C18
             "LA14_N": "U22", # C19
-            "LA18_CC_P": "AA9", # C22
-            "LA18_CC_N": "AA8", # C23
+            "LA18_P_CC": "AA9", # C22
+            "LA18_N_CC": "AA8", # C23
             "LA27_P": "AB2", # C26
             "LA27_N": "AB1", # C27
 
             # D
-            "LA01_CC_P": "W16", # D8
-            "LA01_CC_N": "Y16", # D9
+            "LA01_P_CC": "W16", # D8
+            "LA01_N_CC": "Y16", # D9
             "LA05_P": "AB19", # D11
             "LA05_N": "AB20", # D12
             "LA09_P": "U15", # D14
             "LA09_N": "U16", # D15
             "LA13_P": "V22", # D17
             "LA13_N": "W22", # D18
-            "LA17_CC_P": "AA7", # D20
-            "LA17_CC_N": "AA6", # D21
+            "LA17_P_CC": "AA7", # D20
+            "LA17_N_CC": "AA6", # D21
             "LA23_P": "V12", # D23
             "LA23_N": "W12", # D24
             "LA26_P": "U12", # D26
             "LA26_N": "U11", # D27
 
             # G
-            "CLK1_P": "Y6", # G2
-            "CLK1_N": "Y5", # G3
-            "LA00_CC_P": "Y19", # G6
-            "LA00_CC_N": "AA19", # G7
+            "CLK1_M2C_P": "Y6", # G2
+            "CLK1_M2C_N": "Y5", # G3
+            "LA00_P_CC": "Y19", # G6
+            "LA00_N_CC": "AA19", # G7
             "LA03_P": "AA16", # G9
             "LA03_N": "AB16", # G10
             "LA08_P": "AA17", # G12
@@ -521,8 +521,8 @@ class ZC702Platform(XilinxSoCPlatform):
             "LA33_N": "Y10", # G37
 
             # H
-            "CLK0_P": "Y18", # H4
-            "CLK0_N": "AA18", # H5
+            "CLK0_M2C_P": "Y18", # H4
+            "CLK0_M2C_N": "AA18", # H5
             "LA02_P": "V14", # H7
             "LA02_N": "V15", # H8
             "LA04_P": "V13", # H10

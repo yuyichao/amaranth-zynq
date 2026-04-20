@@ -18,9 +18,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Install Yosys
-        run: sudo apt-get install yosys
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

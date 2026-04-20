@@ -31,6 +31,7 @@ authors = [
 dev = [
     # Testing
     "pytest >= 8.0.0",
+    "pytest-xdist >= 3.5.0",
 ]
 
 [tool.setuptools]

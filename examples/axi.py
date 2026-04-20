@@ -45,11 +45,13 @@ class AXIExample(Elaboratable):
         return m
 
 
-core = AXIExample()
-plat = Zu3egPlatform(bif=r"""
+if __name__ == '__main__':
+    from transactron import TransactronContextElaboratable
+    core = TransactronContextElaboratable(AXIExample())
+    plat = Zu3egPlatform(bif=r"""
             all:
             {
                 [destination_device = pl] {{name}}.bit
             }
         """)
-plat.build(core)
+    plat.build(core)

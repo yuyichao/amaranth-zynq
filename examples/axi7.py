@@ -1,10 +1,8 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import ResetSynchronizer
-from amaranth_zynq.platform import ZedboardPlatform
 from amaranth_zynq.ps7 import PsZynq
 from amaranth_axi import AXI32AXI, AXI2AXILite, AXILiteXBar, DemoAXI
-
 
 class AXIExample(Elaboratable):
     def elaborate(self, platform):
@@ -38,7 +36,9 @@ class AXIExample(Elaboratable):
 
         return m
 
-
-core = AXIExample()
-plat = ZedboardPlatform()
-plat.build(core)
+if __name__ == '__main__':
+    from transactron import TransactronContextElaboratable
+    from amaranth_zynq.platform import ZedboardPlatform
+    core = TransactronContextElaboratable(AXIExample())
+    plat = ZedboardPlatform()
+    plat.build(core)

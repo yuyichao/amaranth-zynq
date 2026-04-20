@@ -30,7 +30,7 @@ class BasicExample(Elaboratable):
         m.submodules.reset_sync = reset_sync
         return m
 
-
-core = BasicExample()
-plat = Zu3egPlatform()
-plat.build(core)
+if __name__ == '__main__':
+    core = BasicExample()
+    plat = Zu3egPlatform()
+    plat.build(core)

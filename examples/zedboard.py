@@ -1,6 +1,5 @@
 from amaranth import *
 from amaranth.lib.cdc import ResetSynchronizer
-from amaranth_zynq.platform import ZedboardPlatform
 from amaranth_zynq.ps7 import PsZynq
 
 class Zedboard(Elaboratable):
@@ -22,12 +21,7 @@ class Zedboard(Elaboratable):
         return m
 
 if __name__ == '__main__':
-
-    bif = r"""
-            all:
-            {
-                {{name}}.bit
-            }
-           """
-
-    ZedboardPlatform(bif).build(elaboratable=Zedboard())
+    from amaranth_zynq.platform import ZedboardPlatform
+    core = Zedboard()
+    plat = ZedboardPlatform()
+    plat.build(core)

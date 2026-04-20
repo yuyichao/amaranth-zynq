@@ -31,5 +31,5 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install .[dev]
 
-      # - name: Run tests
-      #   run: pytest -n auto --verbose
+      - name: Run tests
+        run: pytest -n auto --verbose

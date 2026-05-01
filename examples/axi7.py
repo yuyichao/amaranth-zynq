@@ -16,7 +16,7 @@ class AXIExample(Elaboratable):
         reset_sync = ResetSynchronizer(reset, domain="sync")
         m.submodules.reset_sync = reset_sync
 
-        axi_master = ps.MAXIGP1
+        axi_master = ps.MAXIGP1.cast(m, len_width=8)
         m.d.comb += ps.MAXIGP1ACLK.eq(clk)
 
         m.submodules.axi2axil = axi2axil = AXI2AXILite(data_width=32,

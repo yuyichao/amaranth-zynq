@@ -11,10 +11,10 @@ from amaranth_zynq.interfaces import *
 __all__ = ['PsZynq']
 
 class PsZynq(wiring.Component):
-    MAXIGP0: Out(AXI4(32, 32, 12))
+    MAXIGP0: Out(AXI4(32, 32, 12, len_width=4))
     MAXIGP0ACLK: In(1)
     MAXIGP0ARESETN: Out(1)
-    MAXIGP1: Out(AXI4(32, 32, 12))
+    MAXIGP1: Out(AXI4(32, 32, 12, len_width=4))
     MAXIGP1ACLK: In(1)
     MAXIGP1ARESETN: Out(1)
 
@@ -229,8 +229,6 @@ class PsZynq(wiring.Component):
         for maxigp in ("MAXIGP0", "MAXIGP1"):
             expand_oport(f"o_{maxigp}ARSIZE", 2)
             expand_oport(f"o_{maxigp}AWSIZE", 2)
-            expand_oport(f"o_{maxigp}ARLEN", 4)
-            expand_oport(f"o_{maxigp}AWLEN", 4)
 
             # Currently not defined by wb2axip
             # expand_oport(f"o_{maxigp}ARREGION", 0)

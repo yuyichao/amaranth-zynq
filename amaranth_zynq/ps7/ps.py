@@ -18,11 +18,9 @@ class PsZynq(wiring.Component):
     MAXIGP1ACLK: In(1)
     MAXIGP1ARESETN: Out(1)
 
-    SAXIACP: In(AXI3(64, 32, 3))
+    SAXIACP: In(AXI3(64, 32, 3, user_width=5))
     SAXIACPARESETN: Out(1)
     SAXIACPACLK: In(1)
-    SAXIACPARUSER: In(5)
-    SAXIACPAWUSER: In(5)
     SAXIACPARQOS: In(4)
     SAXIACPAWQOS: In(4)
 
